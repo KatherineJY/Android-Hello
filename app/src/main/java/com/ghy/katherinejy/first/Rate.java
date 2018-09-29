@@ -3,6 +3,7 @@ package com.ghy.katherinejy.first;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,11 +14,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Rate extends AppCompatActivity {
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+
+public class Rate extends AppCompatActivity implements Runnable{
 
     EditText need;
     TextView output;
-    private String tag;
+    private final String tag = "RateActivity";
     double dollor_per = 0;
     double euro_per = 0;
     double won_per = 0;
@@ -28,6 +36,10 @@ public class Rate extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rate);
+
+        Thread t = new Thread(this);
+        t.run();
+
         huilv = getSharedPreferences("huiyu",Context.MODE_PRIVATE);
         dollor_per = huilv.getFloat("dollor_per",0.0f);
         euro_per = huilv.getFloat("euro_per",0.0f);
@@ -108,7 +120,32 @@ public class Rate extends AppCompatActivity {
                 output.setText(String.format("%#.2f",d*won_per));
             }
         }
-
-
     }
+
+     @Override
+     public void run() {
+        String urlString = "http://www.boc.cn/sourcedb/whpj/";
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            int responseCode = urlConnection.getResponseCode();
+            Log.i(tag,"try to fetch");
+            if (responseCode == 200) {
+                InputStream inputStream = urlConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                StringBuilder stringBuilder = new StringBuilder();
+                String temp = "";
+                while ((temp = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(temp);
+                }
+                String result = stringBuilder.toString();
+                Log.i(tag, result);
+            }
+            Log.i(tag,responseCode+"");
+            Log.i(tag,"fetch finish");
+        }
+        catch(Exception e){
+            Log.i(tag,"fetch fail"+e.toString());
+        }
+      }
 }
