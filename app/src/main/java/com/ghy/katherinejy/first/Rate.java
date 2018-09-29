@@ -1,6 +1,8 @@
 package com.ghy.katherinejy.first;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,16 +18,20 @@ public class Rate extends AppCompatActivity {
     EditText need;
     TextView output;
     private String tag;
-    double dollor_per = 0.1;
-    double euro_per = 0.2;
-    double won_per = 0.3;
+    double dollor_per = 0;
+    double euro_per = 0;
+    double won_per = 0;
+    SharedPreferences huilv;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rate);
-
-
+        huilv = getSharedPreferences("huiyu",Context.MODE_PRIVATE);
+        dollor_per = huilv.getFloat("dollor_per",0.0f);
+        euro_per = huilv.getFloat("euro_per",0.0f);
+        won_per = huilv.getFloat("won_per",0.0f);
     }
 
     @Override
@@ -36,6 +42,11 @@ public class Rate extends AppCompatActivity {
             euro_per = bundle.getDouble("new_euro",0.1);
             won_per = bundle.getDouble("new_won",0.1);
 
+            SharedPreferences.Editor editor = huilv.edit();
+            editor.putFloat("dllor_per", (float)dollor_per);
+            editor.putFloat("euro", (float)euro_per);
+            editor.putFloat("won", (float)won_per);
+            editor.apply();
         }
         super.onActivityResult(requestCode,resultCode,data);
     }
@@ -91,8 +102,7 @@ public class Rate extends AppCompatActivity {
                 output.setText(String.format("%#.2f",d*dollor_per));
             }
             else if( btn.getId()==R.id.euro ){
-                output.setText(String.format("%#.2f",d*euro_per
-                ));
+                output.setText(String.format("%#.2f",d*euro_per));
             }
             else if( btn.getId()==R.id.won ){
                 output.setText(String.format("%#.2f",d*won_per));
