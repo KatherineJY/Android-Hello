@@ -38,7 +38,7 @@ public class Rate extends AppCompatActivity implements Runnable{
         setContentView(R.layout.activity_rate);
 
         Thread t = new Thread(this);
-        t.run();
+        t.start();
 
         huilv = getSharedPreferences("huiyu",Context.MODE_PRIVATE);
         dollor_per = huilv.getFloat("dollor_per",0.0f);
