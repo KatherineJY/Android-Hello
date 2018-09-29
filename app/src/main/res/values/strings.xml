@@ -2,4 +2,24 @@
     <string name="app_name">First</string>
     <string name="greeting">Happy Friday</string>
     <string name="name">kat</string>
+    <string name="title_activity_basketball">Basketball</string>
+    <string name="team1">Team A</string>
+    <string name="team2">Team B</string>
+    <string name="three_points">+3 POINTS</string>
+    <string name="two_points">+2 POINTS</string>
+    <string name="free_throw">FREE THROW</string>
+    <string name="reset">RESET</string>
+    <string name="height_hint">请输入您的身高，单位为米</string>
+    <string name="height">身高</string>
+    <string name="weight">体重</string>
+    <string name="weight_hint">请输入您的体重，单位为KG</string>
+    <string name="totest">计算BMI</string>
+    <string name="incorrect">您的输入数据有误，请按提示重新输入</string>
+    <string name="rate_hint">请输入金额,单位为人民币</string>
+    <string name="dollor">dollor</string>
+    <string name="euro">euro</string>
+    <string name="won">won</string>
+    <string name="config">config</string>
+    <string name="save">save</string>
+    <string name="menu_set_label">menu</string>
 </resources>
