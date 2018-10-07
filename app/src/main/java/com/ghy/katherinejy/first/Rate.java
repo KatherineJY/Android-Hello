@@ -3,7 +3,6 @@ package com.ghy.katherinejy.first;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.nfc.Tag;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -15,8 +14,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -39,11 +43,6 @@ public class Rate extends AppCompatActivity implements Runnable{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rate);
 
-        huilv = getSharedPreferences("huiyu",Context.MODE_PRIVATE);
-        dollor_per = huilv.getFloat("dollor_per",0.0f);
-        euro_per = huilv.getFloat("euro_per",0.0f);
-        won_per = huilv.getFloat("won_per",0.0f);
-
         Thread t = new Thread(this);
         t.start();
         handler = new Handler() {
@@ -56,6 +55,12 @@ public class Rate extends AppCompatActivity implements Runnable{
                 super.handleMessage(msg);
             }
         };
+
+        huilv = getSharedPreferences("huiyu",Context.MODE_PRIVATE);
+        dollor_per = huilv.getFloat("dollor_per",0.0f);
+        euro_per = huilv.getFloat("euro_per",0.0f);
+        won_per = huilv.getFloat("won_per",0.0f);
+
     }
 
     @Override
@@ -136,7 +141,38 @@ public class Rate extends AppCompatActivity implements Runnable{
 
      @Override
      public void run() {
-        String urlString = "http://www.boc.cn/sourcedb/whpj/";
+        String urlString = "http://www.usd-cny.com/bankofchina.htm";
+         try {
+             Document doc = Jsoup.connect(urlString).get();
+             Elements trs = doc.select("table").select("tr");
+             Log.i("tag","open_url");
+             int i;
+             for(i=0;i<trs.size();i++){
+                 Elements tds = trs.get(i).select("td");
+                 Log.i("tag",tds.size()+"");
+                 if(tds.size()!=0){
+                     String name = tds.get(0).select("a").text();
+                     Log.i("tag",name);
+                     if(name=="美元"){
+                         double t1 = Double.parseDouble(tds.get(5).text());
+                         dollor_per = t1;
+                     }
+                     else if(name=="欧元"){
+                         double t1 = Double.parseDouble(tds.get(5).text());
+                         euro_per = t1;
+                     }
+                     else if(name=="韩国元"){
+                         double t1 = Double.parseDouble(tds.get(5).text());
+                         won_per = t1;
+                     }
+                 }
+             }
+         } catch (IOException e) {
+             Log.i("tag","fail");
+             e.printStackTrace();
+         }
+        Log.i(tag,dollor_per+"  "+euro_per+"  "+won_per);
+        /*
         try {
             URL url = new URL(urlString);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -144,7 +180,7 @@ public class Rate extends AppCompatActivity implements Runnable{
             Log.i(tag,"try to fetch");
             if (responseCode == 200) {
                 InputStream inputStream = urlConnection.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"gb2312"));
                 StringBuilder stringBuilder = new StringBuilder();
                 String temp = "";
                 while ((temp = bufferedReader.readLine()) != null) {
@@ -162,6 +198,7 @@ public class Rate extends AppCompatActivity implements Runnable{
 
         Message msg = handler.obtainMessage(5);
         msg.obj = "hello from run()";
-        handler.sendMessage(msg);
+        handler.sendMessage(msg);*/
       }
+
 }
