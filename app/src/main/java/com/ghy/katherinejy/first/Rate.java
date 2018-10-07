@@ -150,17 +150,18 @@ public class Rate extends AppCompatActivity implements Runnable{
                  Elements tds = trs.get(i).select("td");
                  if(tds.size()!=0){
                      String name = tds.get(0).select("a").text();
-                     if(name=="美元"){
+
+                     if(name.equals("美元")){
                          double t1 = Double.parseDouble(tds.get(5).text());
-                         dollor_per = t1;
+                         dollor_per = t1/100;
                      }
-                     else if(name=="欧元"){
+                     else if(name.equals("欧元")){
                          double t1 = Double.parseDouble(tds.get(5).text());
-                         euro_per = t1;
+                         euro_per = t1/100;
                      }
-                     else if(name=="韩国元"){
+                     else if(name.equals("韩国元")){
                          double t1 = Double.parseDouble(tds.get(5).text());
-                         won_per = t1;
+                         won_per = t1/100;
                      }
                  }
              }
