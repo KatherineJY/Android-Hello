@@ -145,14 +145,11 @@ public class Rate extends AppCompatActivity implements Runnable{
          try {
              Document doc = Jsoup.connect(urlString).get();
              Elements trs = doc.select("table").select("tr");
-             Log.i("tag","open_url");
              int i;
              for(i=0;i<trs.size();i++){
                  Elements tds = trs.get(i).select("td");
-                 Log.i("tag",tds.size()+"");
                  if(tds.size()!=0){
                      String name = tds.get(0).select("a").text();
-                     Log.i("tag",name);
                      if(name=="美元"){
                          double t1 = Double.parseDouble(tds.get(5).text());
                          dollor_per = t1;
@@ -168,10 +165,9 @@ public class Rate extends AppCompatActivity implements Runnable{
                  }
              }
          } catch (IOException e) {
-             Log.i("tag","fail");
              e.printStackTrace();
          }
-        Log.i(tag,dollor_per+"  "+euro_per+"  "+won_per);
+        Log.i(tag,"after"+dollor_per+"  "+euro_per+"  "+won_per);
         /*
         try {
             URL url = new URL(urlString);
