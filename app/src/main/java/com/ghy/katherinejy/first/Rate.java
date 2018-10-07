@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.nfc.Tag;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,20 +32,30 @@ public class Rate extends AppCompatActivity implements Runnable{
     double euro_per = 0;
     double won_per = 0;
     SharedPreferences huilv;
-
+    Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rate);
 
-        Thread t = new Thread(this);
-        t.start();
-
         huilv = getSharedPreferences("huiyu",Context.MODE_PRIVATE);
         dollor_per = huilv.getFloat("dollor_per",0.0f);
         euro_per = huilv.getFloat("euro_per",0.0f);
         won_per = huilv.getFloat("won_per",0.0f);
+
+        Thread t = new Thread(this);
+        t.start();
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                if(msg.what==5){
+                    String str =(String) msg.obj;
+
+                }
+                super.handleMessage(msg);
+            }
+        };
     }
 
     @Override
@@ -147,5 +159,9 @@ public class Rate extends AppCompatActivity implements Runnable{
         catch(Exception e){
             Log.i(tag,"fetch fail"+e.toString());
         }
+
+        Message msg = handler.obtainMessage(5);
+        msg.obj = "hello from run()";
+        handler.sendMessage(msg);
       }
 }
