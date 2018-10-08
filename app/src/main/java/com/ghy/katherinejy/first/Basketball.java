@@ -2,6 +2,7 @@ package com.ghy.katherinejy.first;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ public class Basketball extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_basketball);
+        Log.i("Life","onCreat:");
 
         mTeam1ThreePointsBtn = (Button) findViewById(R.id.team1_3points);
         mTeam1TwoPointsBtn = (Button) findViewById(R.id.team1_2points);
@@ -88,6 +90,42 @@ public class Basketball extends Activity {
                 mTeam2Score.setText(0+"");
             }
         });
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        Log.i("life","onStart:");
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        Log.i("life","onResume:");
+    }
+
+    @Override
+    protected  void onRestart(){
+        super.onRestart();
+        Log.i("life","onRestart:");
+    }
+
+    @Override
+    protected  void onPause(){
+        super.onPause();
+        Log.i("life","onPause");
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        Log.i("life","onStop:");
+    }
+
+    @Override
+    protected  void onDestroy(){
+        super.onDestroy();
+        Log.i("life","onDestroy:");
     }
 
 }

@@ -70,7 +70,7 @@
                     android:background="@color/newTheme"
                     android:text="@string/two_points"
                     android:textSize="10sp"
-                    tools:layout_marginRight="5sp"/>
+                    tools:layout_marginRight="5sp" />
 
                 <Button
                     android:id="@+id/team1_freeThrow"
@@ -80,7 +80,7 @@
                     android:background="@color/newTheme"
                     android:text="@string/free_throw"
                     android:textSize="10sp"
-                    tools:layout_marginRight="5sp"/>
+                    tools:layout_marginRight="5sp" />
             </LinearLayout>
 
         </LinearLayout>
