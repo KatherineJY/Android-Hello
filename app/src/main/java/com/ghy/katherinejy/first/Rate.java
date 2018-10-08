@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Date;
 
 public class Rate extends AppCompatActivity implements Runnable{
 
@@ -37,30 +38,34 @@ public class Rate extends AppCompatActivity implements Runnable{
     double won_per = 0;
     SharedPreferences huilv;
     Handler handler;
+    long updateTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rate);
 
-        Thread t = new Thread(this);
-        t.start();
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                if(msg.what==5){
-                    String str =(String) msg.obj;
-
-                }
-                super.handleMessage(msg);
-            }
-        };
-
         huilv = getSharedPreferences("huiyu",Context.MODE_PRIVATE);
         dollor_per = huilv.getFloat("dollor_per",0.0f);
         euro_per = huilv.getFloat("euro_per",0.0f);
         won_per = huilv.getFloat("won_per",0.0f);
+        updateTime = huilv.getLong("updateTime",0);
 
+        long currentTime = System.currentTimeMillis();
+        if( updateTime==0 || (currentTime-updateTime)>=24*60*60*1000 ) {
+            Thread t = new Thread(this);
+            t.start();
+            handler = new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    if (msg.what == 5) {
+                        String str = (String) msg.obj;
+
+                    }
+                    super.handleMessage(msg);
+                }
+            };
+        }
     }
 
     @Override
@@ -73,8 +78,9 @@ public class Rate extends AppCompatActivity implements Runnable{
 
             SharedPreferences.Editor editor = huilv.edit();
             editor.putFloat("dllor_per", (float)dollor_per);
-            editor.putFloat("euro", (float)euro_per);
-            editor.putFloat("won", (float)won_per);
+            editor.putFloat("euro_per", (float)euro_per);
+            editor.putFloat("won_per", (float)won_per);
+            editor.putLong("updateTime",updateTime);
             editor.apply();
         }
         super.onActivityResult(requestCode,resultCode,data);
@@ -139,36 +145,69 @@ public class Rate extends AppCompatActivity implements Runnable{
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.i("life","onSaveInstanceState");
+        SharedPreferences.Editor editor = huilv.edit();
+        editor.putFloat("dllor_per", (float)dollor_per);
+        editor.putFloat("euro_per", (float)euro_per);
+        editor.putFloat("won_per", (float)won_per);
+        editor.putLong("updateTime",updateTime);
+        editor.apply();
+        /*
+        outState.putDouble("dollor_per",dollor_per);
+        outState.putDouble("euro_per",euro_per);
+        outState.putDouble("won_per",won_per);
+        outState.putLong("updateTime",updateTime);*/
+    }
+/*
+    @Override
+    protected  void onRestoreInstanceState(Bundle savedInstanceState){
+        super.onRestoreInstanceState(savedInstanceState);
+        dollor_per = savedInstanceState.getDouble("dollor_per");
+        euro_per = savedInstanceState.getDouble("euro_per");
+        won_per = savedInstanceState.getDouble("won_per");
+        updateTime = savedInstanceState.getLong("updateTime");
+        Log.i("life","onRestoreInstanceState");
+    }
+*/
      @Override
      public void run() {
-        String urlString = "http://www.usd-cny.com/bankofchina.htm";
-         try {
-             Document doc = Jsoup.connect(urlString).get();
-             Elements trs = doc.select("table").select("tr");
-             int i;
-             for(i=0;i<trs.size();i++){
-                 Elements tds = trs.get(i).select("td");
-                 if(tds.size()!=0){
-                     String name = tds.get(0).select("a").text();
 
-                     if(name.equals("美元")){
-                         double t1 = Double.parseDouble(tds.get(5).text());
-                         dollor_per = t1/100;
-                     }
-                     else if(name.equals("欧元")){
-                         double t1 = Double.parseDouble(tds.get(5).text());
-                         euro_per = t1/100;
-                     }
-                     else if(name.equals("韩国元")){
-                         double t1 = Double.parseDouble(tds.get(5).text());
-                         won_per = t1/100;
-                     }
-                 }
-             }
-         } catch (IOException e) {
-             e.printStackTrace();
-         }
-        Log.i(tag,"after"+dollor_per+"  "+euro_per+"  "+won_per);
+            Log.i(tag,"get info from internet...");
+            Log.i(tag,updateTime+" ");
+            String urlString = "http://www.usd-cny.com/bankofchina.htm";
+            try {
+                Document doc = Jsoup.connect(urlString).get();
+                Elements trs = doc.select("table").select("tr");
+                int i;
+                for(i=0;i<trs.size();i++){
+                    Elements tds = trs.get(i).select("td");
+                    if(tds.size()!=0){
+                        String name = tds.get(0).select("a").text();
+
+                        if(name.equals("美元")){
+                            double t1 = Double.parseDouble(tds.get(5).text());
+                            dollor_per = t1/100;
+                        }
+                        else if(name.equals("欧元")){
+                            double t1 = Double.parseDouble(tds.get(5).text());
+                            euro_per = t1/100;
+                        }
+                        else if(name.equals("韩国元")){
+                            double t1 = Double.parseDouble(tds.get(5).text());
+                            won_per = t1/100;
+                        }
+                    }
+                }
+                updateTime = System.currentTimeMillis();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+
         /*
         try {
             URL url = new URL(urlString);

@@ -93,6 +93,26 @@ public class Basketball extends Activity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        String score1 = mTeam1Score.getText().toString();
+        String score2 = mTeam2Score.getText().toString();
+        Log.i("life","onSaveInstanceState");
+        outState.putString("team1",score1);
+        outState.putString("team2",score2);
+    }
+
+    @Override
+    protected  void onRestoreInstanceState(Bundle savedInstanceState){
+        super.onRestoreInstanceState(savedInstanceState);
+        String score1 = savedInstanceState.getString("team1");
+        String score2 = savedInstanceState.getString("team2");
+        Log.i("life","onRestoreInstanceState");
+        mTeam1Score.setText(score1);
+        mTeam2Score.setText(score2);
+    }
+
+    @Override
     protected void onStart(){
         super.onStart();
         Log.i("life","onStart:");
