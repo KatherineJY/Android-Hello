@@ -26,6 +26,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Rate extends AppCompatActivity implements Runnable{
@@ -38,21 +40,22 @@ public class Rate extends AppCompatActivity implements Runnable{
     double won_per = 0;
     SharedPreferences huilv;
     Handler handler;
-    long updateTime = 0;
+    String updateTime = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rate);
 
-        huilv = getSharedPreferences("huiyu",Context.MODE_PRIVATE);
+        huilv = getSharedPreferences("huiyu2",Context.MODE_PRIVATE);
         dollor_per = huilv.getFloat("dollor_per",0.0f);
         euro_per = huilv.getFloat("euro_per",0.0f);
         won_per = huilv.getFloat("won_per",0.0f);
-        updateTime = huilv.getLong("updateTime",0);
+        updateTime = huilv.getString("updateTime","");
 
-        long currentTime = System.currentTimeMillis();
-        if( updateTime==0 || (currentTime-updateTime)>=24*60*60*1000 ) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String currentTime = format.format(Calendar.getInstance().getTime());
+        if( updateTime.equals("") || !currentTime.equals(updateTime) ) {
             Thread t = new Thread(this);
             t.start();
             handler = new Handler() {
@@ -80,7 +83,7 @@ public class Rate extends AppCompatActivity implements Runnable{
             editor.putFloat("dllor_per", (float)dollor_per);
             editor.putFloat("euro_per", (float)euro_per);
             editor.putFloat("won_per", (float)won_per);
-            editor.putLong("updateTime",updateTime);
+            editor.putString("updateTime",updateTime);
             editor.apply();
         }
         super.onActivityResult(requestCode,resultCode,data);
@@ -150,10 +153,10 @@ public class Rate extends AppCompatActivity implements Runnable{
         super.onSaveInstanceState(outState);
         Log.i("life","onSaveInstanceState");
         SharedPreferences.Editor editor = huilv.edit();
-        editor.putFloat("dllor_per", (float)dollor_per);
+        editor.putFloat("dollor_per", (float)dollor_per);
         editor.putFloat("euro_per", (float)euro_per);
         editor.putFloat("won_per", (float)won_per);
-        editor.putLong("updateTime",updateTime);
+        editor.putString("updateTime",updateTime);
         editor.apply();
         /*
         outState.putDouble("dollor_per",dollor_per);
@@ -201,7 +204,8 @@ public class Rate extends AppCompatActivity implements Runnable{
                         }
                     }
                 }
-                updateTime = System.currentTimeMillis();
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                updateTime = format.format(Calendar.getInstance().getTime());
             } catch (IOException e) {
                 e.printStackTrace();
             }
