@@ -25,17 +25,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class NewRateActivity extends ListActivity implements Runnable{
+public class NewRateActivity extends ListActivity implements Runnable, AdapterView.OnItemClickListener,AdapterView.OnItemLongClickListener {
 
     private final String tag = "RateList";
     Handler handler;
     private  int what = 7;
-    //private ArrayList<HashMap<String,String>> listItems;
+    private ArrayList<HashMap<String,String>> retList;
+    SimpleAdapter adapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //setContentView(R.layout.activity_new_rate);
 
         Thread t = new Thread(this);
         t.start();
@@ -45,8 +47,8 @@ public class NewRateActivity extends ListActivity implements Runnable{
             public void handleMessage(Message msg) {
                 if (msg.what == what) {
                     Log.i(tag,"get msg");
-                    List<HashMap<String,String>> retList = (List<HashMap<String, String>>) msg.obj;
-                    SimpleAdapter adapter = new SimpleAdapter(NewRateActivity.this,retList,R.layout.mylist,
+                    retList = (ArrayList<HashMap<String, String>>) msg.obj;
+                    adapter = new SimpleAdapter(NewRateActivity.this,retList,R.layout.mylist,
                             new String[]{"ItemTitle","ItemDetail"},
                             new int[] {R.id.itemTitle,R.id.itemDetail});
                     setListAdapter(adapter);
@@ -56,21 +58,11 @@ public class NewRateActivity extends ListActivity implements Runnable{
             }
         };
 
-        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                HashMap<String,String> map = (HashMap<String,String>) getListView().getItemAtPosition(position);
-                String titleStr = map.get("ItemTitle");
-                String valueStr = map.get("ItemDetail");
+        getListView().setOnItemClickListener(this);
 
-                Intent rateCalc = new Intent(NewRateActivity.this,RateCalActivity.class);
-                rateCalc.putExtra("title",titleStr);
-                rateCalc.putExtra("rate",Float.parseFloat(valueStr));
-                NewRateActivity.this.startActivity(rateCalc);
+        getListView().setOnItemLongClickListener(this);
 
-            }
-        });
-        getListView().setEmptyView((View) findViewById(R.layout.empty_view));
+        //getListView().setEmptyView((View) findViewById(R.layout.empty_view));
     }
 
     @Override
@@ -104,4 +96,24 @@ public class NewRateActivity extends ListActivity implements Runnable{
         handler.sendMessage(msg);
     }
 
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        retList.remove(position);
+        adapter.notifyDataSetChanged();
+        return true;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if( onItemLongClick(parent,view,position,id) )
+            return;
+        HashMap<String,String> map = (HashMap<String,String>) getListView().getItemAtPosition(position);
+        String titleStr = map.get("ItemTitle");
+        String valueStr = map.get("ItemDetail");
+
+        Intent rateCalc = new Intent(NewRateActivity.this,RateCalActivity.class);
+        rateCalc.putExtra("title",titleStr);
+        rateCalc.putExtra("rate",Float.parseFloat(valueStr));
+        NewRateActivity.this.startActivity(rateCalc);
+    }
 }

@@ -19,7 +19,9 @@
         <activity android:name=".Health" />
         <activity android:name=".Rate" />
         <activity android:name=".Config" />
-        <activity android:name=".RateListActivity"></activity>
+        <activity android:name=".RateListActivity">
+
+        </activity>
         <activity android:name=".NewRateActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

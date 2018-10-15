@@ -28,7 +28,7 @@ public class RateListActivity extends ListActivity implements  Runnable {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_rate_list);
+        setContentView(R.layout.activity_rate_list);
 
         Thread t = new Thread(this);
         t.start();
@@ -43,6 +43,7 @@ public class RateListActivity extends ListActivity implements  Runnable {
                 super.handleMessage(msg);
             }
         };
+
     }
 
     @Override
