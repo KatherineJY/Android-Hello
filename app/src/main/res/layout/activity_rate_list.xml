@@ -11,5 +11,14 @@
         android:layout_height="match_parent"
         android:columnWidth="100dp"
         android:numColumns="3"
-        android:id="@+id/myGridList"/>
+        android:id="@+id/myGridList">
+
+        <TextView
+            android:id="@+id/nodata"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No Data"
+            android:gravity="center"/>
+    </GridView>
+
 </android.support.constraint.ConstraintLayout>

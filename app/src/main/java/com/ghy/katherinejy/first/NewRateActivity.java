@@ -37,7 +37,6 @@ public class NewRateActivity extends ListActivity implements Runnable, AdapterVi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_new_rate);
 
         Thread t = new Thread(this);
         t.start();
