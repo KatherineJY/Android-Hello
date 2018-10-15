@@ -1,6 +1,8 @@
 package com.ghy.katherinejy.first;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
@@ -97,8 +99,19 @@ public class NewRateActivity extends ListActivity implements Runnable, AdapterVi
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        retList.remove(position);
-        adapter.notifyDataSetChanged();
+        final int pos = position;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("notice")
+                .setMessage("Delete?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        retList.remove(pos);
+                        adapter.notifyDataSetChanged();
+                    }
+                })
+                .setNegativeButton("No",null);
+        builder.create().show();
         return true;
     }
 

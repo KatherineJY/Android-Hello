@@ -21,7 +21,7 @@ public class MyList extends Activity implements AdapterView.OnItemClickListener{
         ArrayList<String> data = new ArrayList<String>();
         for(int i=0;i<100;i++)
             data.add("item"+i);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,data);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1);
         listView.setAdapter(adapter);
         listView.setEmptyView(findViewById(R.id.nodata));
         listView.setOnItemClickListener(this);
