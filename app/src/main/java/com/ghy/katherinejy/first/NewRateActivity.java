@@ -1,18 +1,23 @@
 package com.ghy.katherinejy.first;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -34,6 +39,7 @@ public class NewRateActivity extends ListActivity implements Runnable{
 
         Thread t = new Thread(this);
         t.start();
+
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -44,12 +50,28 @@ public class NewRateActivity extends ListActivity implements Runnable{
                             new String[]{"ItemTitle","ItemDetail"},
                             new int[] {R.id.itemTitle,R.id.itemDetail});
                     setListAdapter(adapter);
+
                 }
                 super.handleMessage(msg);
             }
         };
-    }
 
+        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                HashMap<String,String> map = (HashMap<String,String>) getListView().getItemAtPosition(position);
+                String titleStr = map.get("ItemTitle");
+                String valueStr = map.get("ItemDetail");
+
+                Intent rateCalc = new Intent(NewRateActivity.this,RateCalActivity.class);
+                rateCalc.putExtra("title",titleStr);
+                rateCalc.putExtra("rate",Float.parseFloat(valueStr));
+                NewRateActivity.this.startActivity(rateCalc);
+
+            }
+        });
+        getListView().setEmptyView((View) findViewById(R.layout.empty_view));
+    }
 
     @Override
     public void run() {
@@ -81,4 +103,5 @@ public class NewRateActivity extends ListActivity implements Runnable{
         msg.obj = rateList;
         handler.sendMessage(msg);
     }
+
 }
