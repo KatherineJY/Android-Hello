@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
 
     tools:context=".FrameActivity">
     <fragment
@@ -33,16 +34,22 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.5"
         android:orientation="horizontal">
+
         <RadioButton
             android:id="@+id/radioHome"
+            style="@style/rg_btn_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
         <RadioButton
             android:id="@+id/radioFunc"
+            style="@style/rg_btn_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
         <RadioButton
             android:id="@+id/radioSetting"
+            style="@style/rg_btn_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </RadioGroup>

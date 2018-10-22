@@ -21,17 +21,19 @@
         <activity android:name=".Config" />
         <activity android:name=".RateListActivity" />
         <activity android:name=".NewRateActivity">
+
+        </activity>
+        <activity android:name=".RateCalActivity" />
+        <activity
+            android:name=".MyList"
+            android:label="@string/title_activity_my_list" />
+        <activity android:name=".FrameActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RateCalActivity" />
-        <activity
-            android:name=".MyList"
-            android:label="@string/title_activity_my_list" />
-        <activity android:name=".FrameActivity"></activity>
     </application>
 
 </manifest>

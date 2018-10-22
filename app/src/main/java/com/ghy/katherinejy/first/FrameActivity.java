@@ -44,12 +44,15 @@ public class FrameActivity extends AppCompatActivity {
                 switch(checkedId){
                     case R.id.radioHome:
                         fragmentTransaction.show(mFragments[0]).commit();
+                        rbHome.setBackgroundResource(R.drawable.shape3);
                         break;
                     case R.id.radioFunc:
                         fragmentTransaction.show(mFragments[1]).commit();
+                        rbFunc.setBackgroundResource(R.drawable.shape3);
                         break;
                     case R.id.radioSetting:
                         fragmentTransaction.show(mFragments[2]).commit();
+                        rbSetting.setBackgroundResource(R.drawable.shape3);
                         break;
                     default:
                         break;
